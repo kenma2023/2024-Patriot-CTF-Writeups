@@ -4,16 +4,16 @@
 	- link - http://chal.competitivecyber.club:8081/
 - The webpage has nothing on it besides some basic CSS & HTML body
 - Look at the source code and at the top there's an interesting `if()` check:
-	- ![Pasted image 20240924131501.png|500](Pasted%20image%2020240924131501.png%7C500.md)
+	- ![attachments/Pasted image 20240924131501.png|500](attachments/Pasted%20image%2020240924131501.png%7C500.md)
 - That `if()` check is used here:
-	- ![Pasted image 20240924131530.png||500](Pasted%20image%2020240924131530.png%7C%7C500.md)
+	- ![attachments/Pasted image 20240924131530.png||500](attachments/Pasted%20image%2020240924131530.png%7C%7C500.md)
 	- with extra HTML elements including the flag being inside the `else()` statement
 - So it's a basic `x-forwarded-for` vulnerability and the source file let's us know which IP-addresses have higher-level access
 - Here's documentation on the [X-Forwarded-For HTTP Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
 - But essentially the XFF-Header lets a server know what the original IP address of the client connecting to it was, in case of there being proxies or other middle-men between transmissions
 - So just open up Burpsuite  -->  paste in the challenge link in the burp-chromium-browser  -->  send to repeater  -->  and add in this line
 	- `X-Forwarded-For: 127.0.0.1`
-	- ![Pasted image 20240924132131.png||500](Pasted%20image%2020240924132131.png%7C%7C500.md)
+	- ![[attachments/Pasted image 20240924132131.png||500](attachments/Pasted%20image%2020240924132131.png%7C%7C500.md)
 - Now the server will think you're the owner/admin of the page and give you the flag
 - Flag: CACI{1_lik3_g1raff3s_4_l0t}
 
@@ -27,25 +27,25 @@
 	- example cookie = eyJ1aWQiOiIzYmFlNjA1ZC1jZWNlLTU0NmItOTdhMC0xZTAxNDBlMWUzZTAiLCJ1c2VybmFtZSI6Im1lIn0.Zu7mZQ.1tbKyVzMtyezXdVATaHW8xs1J8s
 - The server prevents non-alphanumeric inputs for the "username" but not for the password
 	- typical XSS payloads won't cause anything on our end
-	- And even though there's templating here  ![Pasted image 20240921115435.png](Pasted%20image%2020240921115435.png)
+	- And even though there's templating here  ![[attachments/Pasted image 20240921115435.png](attachments/Pasted%20image%2020240921115435.png)
 	- no typical SSTI payloads do anything either so it's probably not XSS or SSTI
 - Here are the requisites to be recognized as an admin and get the flag:
-	- ![Pasted image 20240921134330.png||500](Pasted%20image%2020240921134330.png%7C%7C500.md)
+	- ![[attachments/Pasted image 20240921134330.png||500](attachments/Pasted%20image%2020240921134330.png%7C%7C500.md)
 	- It only cares about the "session" cookie which has 3 parts: 
 		- `is_admin` boolean, `uid` value, and a `username` value
 - Parts of the Solution
 	- Can decode the "session" cookie from Flask to know the formatting for any user(just login once)
-		- ![Pasted image 20240921134045.png||300](Pasted%20image%2020240921134045.png%7C%7C300.md)
+		- ![[attachments/Pasted image 20240921134045.png||300](attachments/Pasted%20image%2020240921134045.png%7C%7C300.md)
 		- used this [online flask session cookie decoder](https://www.kirsle.net/wizards/flask-session.cgi)
 	- We have the "UUID" and can make the same instance of it as the server 
-		- ![Pasted image 20240921135241.png||300](Pasted%20image%2020240921135241.png%7C%7C300.md)
+		- ![[attachments/Pasted image 20240921135241.png||300](attachments/Pasted%20image%2020240921135241.png%7C%7C300.md)
 		- With the UUID we can make any `uid` we want
-			- ![Pasted image 20240921135201.png||300](Pasted%20image%2020240921135201.png%7C%7C300.md)
+			- ![[attachments/Pasted image 20240921135201.png||300](attachments/Pasted%20image%2020240921135201.png%7C%7C300.md)
 	- Need the Secure Key used to make/encrypt each session cookie which in this case is based off the server's start time
-		- ![Pasted image 20240921134930.png||400](Pasted%20image%2020240921134930.png%7C%7C400.md)
+		- ![[attachments/Pasted image 20240921134930.png||400](attachments/Pasted%20image%2020240921134930.png%7C%7C400.md)
 		- The server's start time periodically resets at intervals to prevent people from bruteforcing by just steadily going back in time so it only works for a certain breadth of time
 		- Can reverse engineer the `server_start_time` from the `/status` page
-		- ![Pasted image 20240921135034.png||350](Pasted%20image%2020240921135034.png%7C%7C350.md)
+		- ![[attachments/Pasted image 20240921135034.png||350](attachments/Pasted%20image%2020240921135034.png%7C%7C350.md)
 - Whole Solution:
 	1. Create the same "uid" as the administrator with `uid = uuid.uuid5(secret, 'administrator)`
 	2. Get the server's start time to create the "secure_key"  by looking at the `/status`page
