@@ -13,7 +13,7 @@
 - But essentially the XFF-Header lets a server know what the original IP address of the client connecting to it was, in case of there being proxies or other middle-men between transmissions
 - So just open up Burpsuite  -->  paste in the challenge link in the burp-chromium-browser  -->  send to repeater  -->  and add in this line
 	- `X-Forwarded-For: 127.0.0.1`
-	- ![[attachments/Pasted image 20240924132131.png||500](attachments/Pasted%20image%2020240924132131.png)
+	- ![burp request](Pasted%20image%2020241001113913.png)
 - Now the server will think you're the owner/admin of the page and give you the flag
 - Flag: CACI{1_lik3_g1raff3s_4_l0t}
 
