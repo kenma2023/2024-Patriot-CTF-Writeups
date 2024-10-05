@@ -6,7 +6,7 @@
 - Look at the source code and at the top there's an interesting `if()` check:
 	- ![attachments/Pasted image 20240924131501.png|500](attachments/Pasted%20image%2020240924131501.png)
 - That `if()` check is used here:
-	- ![attachments/Pasted image 20240924131530.png||500](attachments/Pasted%20image%2020240924131530.png
+	- ![attachments/Pasted image 20240924131530.png||500](attachments/Pasted%20image%2020240924131530.png)
 	- with extra HTML elements including the flag being inside the `else()` statement
 - So it's a basic `x-forwarded-for` vulnerability and the source file let's us know which IP-addresses have higher-level access
 - Here's documentation on the [X-Forwarded-For HTTP Header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
@@ -24,7 +24,7 @@
 - If you input any string with substring "admin" for the username it won't let you login
 - if you input anything else it logs you in & creates a "session" cookie 
 - `username: me` & `password: password`
-	- example cookie = eyJ1aWQiOiIzYmFlNjA1ZC1jZWNlLTU0NmItOTdhMC0xZTAxNDBlMWUzZTAiLCJ1c2VybmFtZSI6Im1lIn0.Zu7mZQ.1tbKyVzMtyezXdVATaHW8xs1J8s
+	- example cookie = `eyJ1aWQiOiIzYmFlNjA1ZC1jZWNlLTU0NmItOTdhMC0xZTAxNDBlMWUzZTAiLCJ1c2VybmFtZSI6Im1lIn0.Zu7mZQ.1tbKyVzMtyezXdVATaHW8xs1J8s`
 - The server prevents non-alphanumeric inputs for the "username" but not for the password
 	- typical XSS payloads won't cause anything on our end
 	- And even though there's templating here  ![attachments/Pasted image 20240921115435.png](attachments/Pasted%20image%2020240921115435.png)
